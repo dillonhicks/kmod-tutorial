@@ -1,0 +1,103 @@
+README
+======
+
+This directory contains examples of kernel modules that implement
+certain interfaces we have found to be essential for kernel driver
+driver (pseudo or otherwise).
+
+Specifically the interfaces we wish to show are the:
+
+- procfs
+
+    - helloworld
+    - tabularasa
+
+- ioctrl
+
+    - helloworld
+    - tabularasa
+    - blankslate
+
+- timers
+- sysfs
+  
+    - blankslate
+
+- kernel signals
+
+- kernel parameters
+
+    - helloworld
+
+    
+- Bootstrapping for a module is a little more lengthy than most
+  programming.
+
+- To create a module at all there will need to be a minimum of the
+  following things:
+
+    - the module:
+    
+        - source (.c)
+	- header (.h) 
+	- Makefile
+
+    - the user side library as an api
+    - a user level test program
+    - And typically some datastreams post processing 
+
+
+Examples
+********
+
+**tabularasa**
+
+- It is a little more complex than the simplest possible module as it
+  incorporates the minimal about of stuff requried to make a non
+  trivial module.
+
+- It demonstrates:
+
+    - Setting module level variable via IOCTL
+	
+        - protecting said variable via a mutex
+
+    - Reading the variable from the procfs
+
+    - How to use procfs (albeit simply). Prints "Hello World! I am
+      <tabularasa_module_name>" to ``/proc/tabularasa`` where
+      tabularasa_module_name is a module level variable::
+
+        $ cat /proc/tabularasa
+	Hello World! I am tabularasa
+
+- To execute this example first you must build the module::
+
+    $ cd <kr>/examples/kmods/tabularasa/kmods
+    $ make module 
+
+- Install the module::
+  
+    $ make install
+
+    - This will run a :samp:`sudo insmod tabularasa` 
+
+- Make the user library and program::
+
+    $ make prog
+
+  
+    - This will make a build directory under the tabularasa directory.
+
+    - Contains the compiled *truser* program and *libtabularasa* library
+    
+
+- Execute the user program::
+
+    $ make run
+    Hello World! I am tabularasa
+    Hello World! I am skynet
+    Hello World! I am john-conner
+    Hello World! I am t-800
+    Hello World! I am terminator
+
